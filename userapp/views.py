@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import MultiPartParser
+from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -64,6 +66,7 @@ class UserView(View):
 
 
 class UserAPIView(APIView):
+    renderer_classes = (BrowsableAPIRenderer,)
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get("id")
         if user_id:  # 查询单个
@@ -93,3 +96,17 @@ class UserAPIView(APIView):
     def post(self, request, *args, **kwargs):
         print(request.data)
         return Response("POST GET SUCCESS")
+
+
+class StudentAPIView(APIView):
+    # 局部使用解析器
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        print("POST方法")
+
+        # print(request.POST)
+        print(request.data)
+
+        return Response("POST方法访问成功")
+
