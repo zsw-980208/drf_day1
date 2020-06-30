@@ -10,5 +10,6 @@ urlpatterns = [
     path('userapp/', include("userapp.urls")),
     path('empapp/', include("empapp.urls")),
     path('stuapp/', include("stuapp.urls")),
+    path('bookapp/', include("bookapp.urls")),
     url(r"^media/(?P<path>.*)", serve, {"document_root": settings.MEDIA_ROOT}),
 ]
