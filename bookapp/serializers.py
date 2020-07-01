@@ -51,17 +51,27 @@ class BookDeModelSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError("图书名含有敏感字")
         return value
 
-    # 全局校验钩子  可以通过attrs获取到前台发送的所有的参数
     def validate(self, attrs):
-        # 可以对前端发送的所有数据进行自定义校验
-        # print(self, "当前实例所使用的反序列化器")
         pwd = attrs.get("password")
         re_pwd = attrs.pop("re_pwd")
-        # 自定义规则  两次密码如果不一致  则无法保存
         if pwd != re_pwd:
             raise exceptions.ValidationError("两次密码不一致")
 
         return attrs
+
+class BookListSerializer(serializers.ListSerializer):
+    def update(self, instance, validated_data):
+        # print(type(self))  # 当前调用序列化器类
+        # print(instance)  # 要修改的对象
+        print(validated_data)   # 要修改的数据
+        # print(type(self.child))
+
+        # TODO 将群改 改变成一次改一个  遍历修改
+        for index, obj in enumerate(instance):
+            # 每遍历一次 就修改一个对象的数据
+            self.child.update(obj, validated_data[index])
+
+        return instance
 
 
 class BookModelSerializerV2(serializers.ModelSerializer):
